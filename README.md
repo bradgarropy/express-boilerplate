@@ -1,1 +1,2 @@
-[![Build Status](https://travis-ci.org/bradgarropy/express-boilerplate.svg?branch=dev)](https://travis-ci.org/bradgarropy/express-boilerplate)
+express-boilerplate
+===================
