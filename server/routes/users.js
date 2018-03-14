@@ -31,8 +31,10 @@ router.post(
 
         User.create(req.body)
             .then(document => {
+
                 res.send(document)
                 return
+
             })
             .catch(error => {
 
@@ -51,42 +53,6 @@ router.post(
 
     }
 )
-
-
-// read one
-router.get("/:id", (req, res) => {
-
-    res.send("read one")
-    return
-
-})
-
-
-// read all
-router.get("/", (req, res) => {
-
-    res.send("read all")
-    return
-
-})
-
-
-// update
-router.patch("/:id", (req, res) => {
-
-    res.send("update")
-    return
-
-})
-
-
-// delete
-router.delete("/:id", (req, res) => {
-
-    res.send("delete")
-    return
-
-})
 
 
 // login
