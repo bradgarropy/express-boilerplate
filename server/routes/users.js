@@ -31,8 +31,10 @@ router.post(
 
         User.create(req.body)
             .then(document => {
+
                 res.send(document)
                 return
+
             })
             .catch(error => {
 
