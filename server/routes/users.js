@@ -31,10 +31,8 @@ router.post(
 
         User.create(req.body)
             .then(document => {
-
                 res.send(document)
                 return
-
             })
             .catch(error => {
 
@@ -102,6 +100,8 @@ router.post(
     validate(),
     authenticate.user(),
     (req, res) => {
+
+        console.log(`Login: ${req.user.email}`)
 
         const payload = {
             id: req.user._id,
