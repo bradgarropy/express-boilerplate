@@ -3,20 +3,30 @@ const moment = require("moment")
 
 function logger(request, response, next) {
 
-    // timestamp
-    const timestamp = moment().format("MM-DD-YYYY hh:mm:ss A")
+    // date
+    const date = moment().format("MM-DD-YYYY hh:mm:ss A")
 
-    // entry
-    const entry = `[${timestamp}] "${request.method} ${request.url}" ${JSON.stringify(request.body)}`
+    // method
+    const method = request.method
+
+    // url
+    const url = request.url
+
+    // body
+    const body = JSON.stringify(request.body)
+
+    // log entry
+    const message = `[${date}] "${method} ${url}" ${body}`
 
     // log
-    console.log(entry)
+    console.log(message)
 
     // next
     next()
+    return
 
 }
 
 
-// export logger
+// exports
 module.exports = logger
