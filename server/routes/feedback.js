@@ -31,7 +31,7 @@ router.post(
         email.send(from, to, subject, feedback)
             .then(() => {
 
-                res.json({mesage: "Thank you for your feedback!"})
+                res.json({message: "Thank you for your feedback!"})
                 return
 
             })
