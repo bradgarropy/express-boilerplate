@@ -1,4 +1,5 @@
 const mongoose = require("mongoose")
+const password = require("../utils/password")
 
 
 // define schema
@@ -23,6 +24,28 @@ const userSchema = mongoose.Schema({
         required: [true, "Password is required."],
         unique: false,
     },
+})
+
+
+// middleware
+userSchema.pre("save", function(next) {
+
+    password.hash(this.password)
+        .then(hash => {
+
+            this.password = hash
+
+            next()
+            return
+
+        })
+        .catch(error => {
+
+            next(error)
+            return
+
+        })
+
 })
 
 

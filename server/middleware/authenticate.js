@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken")
+const password = require("../utils/password")
 
 // models
 const User = require("../models/user")
@@ -9,7 +10,6 @@ function user() {
     const middleware = function(req, res, next) {
 
         const email = req.body.email
-        const password = req.body.password
 
         User.findOne({email}).exec()
             .then(user => {
@@ -24,20 +24,25 @@ function user() {
 
                 }
 
-                if(password !== user.password) {
+                password.compare(req.body.password, user.password)
+                    .then(result => {
 
-                    console.log(`Login attempt failed: ${email}`)
+                        if(!result) {
 
-                    res.status(401)
-                    res.send({password: "Incorrect password."})
-                    return
+                            console.log(`Login attempt failed: ${email}`)
 
-                }
+                            res.status(401)
+                            res.send({password: "Incorrect password."})
+                            return
 
-                req.user = user
+                        }
 
-                next()
-                return
+                        req.user = user
+
+                        next()
+                        return
+
+                    })
 
             })
             .catch(error => {
