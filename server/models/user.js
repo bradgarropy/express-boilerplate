@@ -1,5 +1,11 @@
 const mongoose = require("mongoose")
 const password = require("../utils/password")
+const plugins = require("../plugins/mongoose")
+
+
+// plugins
+mongoose.plugin(plugins.cleanJSON)
+mongoose.plugin(plugins.deleteEmptyProperties)
 
 
 // define schema
