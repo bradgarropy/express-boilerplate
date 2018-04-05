@@ -1,6 +1,6 @@
 const express = require("express")
 const {check} = require("express-validator/check")
-const jwt = require("jsonwebtoken")
+const token = require("../utils/token")
 
 // models
 const User = require("../models/user")
@@ -14,7 +14,7 @@ const authenticate = require("../middleware/authenticate")
 const router = express.Router()
 
 
-// create
+// register
 router.post(
     "/",
     [
@@ -69,17 +69,71 @@ router.post(
 
         console.log(`Login: ${req.user.email}`)
 
-        const payload = {
-            id: req.user._id,
-            first_name: req.user.first_name,
-            last_name: req.user.last_name,
-            email: req.user.email,
-        }
+        const jwt = token.create(req.user)
 
-        const token = jwt.sign(payload, process.env.SECRET)
-
-        res.send({token})
+        res.send({token: jwt})
         return
+
+    }
+
+)
+
+
+// read one
+router.get(
+    "/:id",
+    authenticate.token(),
+    (req, res, next) => {
+
+        User.findOne({_id: req.params.id})
+            .then(document => {
+
+                res.send(document)
+                return
+
+            })
+            .catch(error => {
+
+                next(error)
+                return
+
+            })
+
+    }
+
+)
+
+
+// update
+router.patch(
+    "/:id",
+    authenticate.token(),
+    (req, res, next) => {
+
+        const updates = req.body
+
+        User.findOne({_id: req.params.id})
+            .then(document => {
+
+                Object.assign(document, updates)
+
+                document.save()
+                    .then(document => {
+
+                        const jwt = token.create(document)
+
+                        res.send({token: jwt})
+                        return
+
+                    })
+
+            })
+            .catch((error) => {
+
+                next(error)
+                return
+
+            })
 
     }
 
