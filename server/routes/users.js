@@ -1,5 +1,7 @@
 const express = require("express")
 const {check} = require("express-validator/check")
+
+// utils
 const token = require("../utils/token")
 
 // models
