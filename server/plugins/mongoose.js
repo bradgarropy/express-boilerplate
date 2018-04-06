@@ -17,7 +17,7 @@ function deleteEmptyProperties(schema) {
 
         Object.keys(this._doc).forEach((key) => {
 
-            const value = !this[key]
+            const value = this[key] === null
                 ? undefined
                 : this[key]
 
