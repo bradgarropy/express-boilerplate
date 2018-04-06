@@ -83,11 +83,11 @@ router.post(
 
 // read one
 router.get(
-    "/:id",
+    "/",
     authenticate.token(),
     (req, res, next) => {
 
-        User.findOne({_id: req.params.id})
+        User.findOne({_id: req.user.id})
             .then(document => {
 
                 res.send(document)
@@ -108,13 +108,13 @@ router.get(
 
 // update
 router.patch(
-    "/:id",
+    "/",
     authenticate.token(),
     (req, res, next) => {
 
         const updates = req.body
 
-        User.findOne({_id: req.params.id})
+        User.findOne({_id: req.user.id})
             .then(document => {
 
                 Object.assign(document, updates)
