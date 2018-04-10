@@ -3,6 +3,7 @@ const {check} = require("express-validator/check")
 
 // utils
 const token = require("../utils/token")
+const password = require("../utils/password")
 
 // models
 const User = require("../models/user")
@@ -130,11 +131,64 @@ router.patch(
                     })
 
             })
-            .catch((error) => {
+            .catch(error => {
 
                 next(error)
                 return
 
+            })
+
+    }
+
+)
+
+
+// change password
+router.post(
+    "/password",
+    [
+        check("current_password").not().isEmpty().withMessage("Current password is required."),
+        check("new_password").not().isEmpty().withMessage("New password is required."),
+        check("confirmation").not().isEmpty().withMessage("Password confirmation is required."),
+        check("confirmation").custom((value, {req}) => value === req.body.new_password).withMessage("Passwords must match."),
+    ],
+    validate(),
+    authenticate.token(),
+    (req, res, next) => {
+
+        User.findById(req.user.id)
+            .then((document) => {
+
+                password.compare(req.body.current_password, document.password)
+                    .then(result => {
+
+                        if(!result) {
+
+                            res.status(401)
+                            res.send({current_password: "Incorrect password."})
+                            return
+
+                        }
+
+                        document.password = req.body.new_password
+
+                        document.save()
+                            .then(document => {
+
+                                const jwt = token.create(document)
+
+                                res.send({token: jwt})
+                                return
+
+                            })
+
+                    })
+
+            })
+            .catch(error => {
+
+                next(error)
+                return
             })
 
     }
