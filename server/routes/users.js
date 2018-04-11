@@ -1,9 +1,11 @@
 const express = require("express")
 const {check} = require("express-validator/check")
+const jwt = require("jsonwebtoken")
 
 // utils
 const token = require("../utils/token")
 const password = require("../utils/password")
+const email = require("../utils/email")
 
 // models
 const User = require("../models/user")
@@ -189,6 +191,59 @@ router.post(
 
                 next(error)
                 return
+            })
+
+    }
+
+)
+
+
+// forgot password
+router.post(
+    "/forgot",
+    [
+        check("email").not().isEmpty().withMessage("Email is required."),
+        check("email").isEmail().withMessage("Invalid email."),
+    ],
+    validate(),
+    (req, res, next) => {
+
+        User.findOne({email: req.body.email})
+            .then(document => {
+
+                if(!document) {
+
+                    res.status(404)
+                    res.json({email: "User does not exist."})
+                    return
+
+                }
+
+                const payload = {
+                    id: document._id,
+                }
+
+                const token = jwt.sign(payload, document.password, {expiresIn: "1d"})
+
+                const from = "do-not-reply@boilerplate.com"
+                const to = req.body.email
+                const subject = "Boilerplate - Password Reset Request"
+                const link = `${req.headers.origin}/reset/${token}`
+
+                email.send(from, to, subject, link)
+                    .then(() => {
+
+                        res.json({message: "Password reset email sent!"})
+                        return
+
+                    })
+
+            })
+            .catch(error => {
+
+                next(error)
+                return
+
             })
 
     }

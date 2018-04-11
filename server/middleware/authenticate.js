@@ -13,7 +13,7 @@ function user() {
 
         const email = req.body.email
 
-        User.findOne({email}).exec()
+        User.findOne({email})
             .then(user => {
 
                 if(!user) {
