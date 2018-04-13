@@ -251,5 +251,88 @@ router.post(
 )
 
 
+// reset password
+router.post(
+    "/reset",
+    [
+        check("password").not().isEmpty().withMessage("Password is required."),
+        check("confirmation").not().isEmpty().withMessage("Password confirmation is required."),
+        check("confirmation").custom((value, {req}) => value === req.body.password).withMessage("Passwords must match."),
+    ],
+    validate(),
+    (req, res, next) => {
+
+        const token = jwt.decode(req.body.token)
+
+        if(!token) {
+
+            res.status(403)
+            res.json({message: "Invalid password reset token."})
+            return
+
+        }
+
+        User.findById(token.id)
+            .then(user => {
+
+                if(!user) {
+
+                    res.status(403)
+                    res.json({message: "Invalid password reset token."})
+                    return
+
+                }
+
+                jwt.verify(req.body.token, user.password, error => {
+
+                    if(error) {
+
+                        console.log(error.name)
+
+                        let message = null
+
+                        switch(error.name) {
+
+                            case "TokenExpiredError":
+                                message = "Expired password reset token."
+                                break
+
+                            case "JsonWebTokenError":
+                                message = "Invalid password reset token."
+                                break
+
+                        }
+
+                        res.status(403)
+                        res.json({message})
+                        return
+
+                    }
+
+                    user.password = req.body.password
+
+                    user.save()
+                        .then(() => {
+
+                            res.json({message: "Password reset successfully!"})
+                            return
+
+                        })
+
+                })
+
+            })
+            .catch(error => {
+
+                next(error)
+                return
+
+            })
+
+    }
+
+)
+
+
 // export
 module.exports = router
