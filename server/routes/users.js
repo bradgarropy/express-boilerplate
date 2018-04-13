@@ -314,8 +314,18 @@ router.post(
                     user.save()
                         .then(() => {
 
-                            res.json({message: "Password reset successfully!"})
-                            return
+                            const from = "do-not-reply@boilerplate.com"
+                            const to = user.email
+                            const subject = "Boilerplate - Password Reset Confirmation"
+                            const body = "Your password has been reset successfully!"
+
+                            email.send(from, to, subject, body)
+                                .then(() => {
+
+                                    res.json({message: "Password reset successfully!"})
+                                    return
+
+                                })
 
                         })
 
