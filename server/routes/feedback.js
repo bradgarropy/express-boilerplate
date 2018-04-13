@@ -35,7 +35,7 @@ router.post(
                 return
 
             })
-            .catch((error) => {
+            .catch(error => {
 
                 next(error)
                 return

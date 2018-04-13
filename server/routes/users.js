@@ -159,7 +159,7 @@ router.post(
     (req, res, next) => {
 
         User.findById(req.user.id)
-            .then((document) => {
+            .then(document => {
 
                 password.compare(req.body.current_password, document.password)
                     .then(result => {

@@ -15,7 +15,7 @@ function deleteEmptyProperties(schema) {
 
     schema.pre("save", function(next) {
 
-        Object.keys(this._doc).forEach((key) => {
+        Object.keys(this._doc).forEach(key => {
 
             const value = this[key] === null
                 ? undefined
