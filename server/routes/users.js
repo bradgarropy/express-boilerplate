@@ -33,10 +33,20 @@ router.post(
     (req, res, next) => {
 
         User.create(req.body)
-            .then(document => {
+            .then(user => {
 
-                res.json(document)
-                return
+                const from = "do-not-reply@boilerplate.com"
+                const to = user.email
+                const subject = "Boilerplate - Registration Confirmation"
+                const body = "Welcome to Boilerplate!"
+
+                email.send(from, to, subject, body)
+                    .then(() => {
+
+                        res.json(user)
+                        return
+
+                    })
 
             })
             .catch(error => {
@@ -100,9 +110,9 @@ router.get(
     (req, res, next) => {
 
         User.findById(req.user.id)
-            .then(document => {
+            .then(user => {
 
-                res.json(document)
+                res.json(user)
                 return
 
             })
