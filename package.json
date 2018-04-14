@@ -4,9 +4,10 @@
     "description": "Boilerplate code for Express.",
     "main": "server/server.js",
     "scripts": {
+        "dev": "nodemon",
         "start": "node server/server.js",
         "lint": "eslint . --ext .js",
-        "dev": "nodemon"
+        "nsp": "nsp check"
     },
     "repository": {
         "type": "git",
@@ -32,6 +33,7 @@
     },
     "devDependencies": {
         "eslint": "^4.18.2",
-        "nodemon": "^1.15.1"
+        "nodemon": "^1.15.1",
+        "nsp": "^3.2.1"
     }
 }
