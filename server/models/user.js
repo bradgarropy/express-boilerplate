@@ -83,6 +83,21 @@ userSchema.methods.createAuthenticationToken = function() {
 }
 
 
+userSchema.methods.createResetToken = function() {
+
+    const payload = {
+        id: this._id,
+    }
+
+    const options = {
+        expiresIn: "1d",
+    }
+
+    return jwt.sign(payload, this.password, options)
+
+}
+
+
 // create model
 const User = mongoose.model("User", userSchema)
 

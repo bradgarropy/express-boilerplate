@@ -218,9 +218,9 @@ router.post(
     (req, res, next) => {
 
         User.findOne({email: req.body.email})
-            .then(document => {
+            .then(user => {
 
-                if(!document) {
+                if(!user) {
 
                     res.status(404)
                     res.json({email: "User does not exist."})
@@ -228,11 +228,7 @@ router.post(
 
                 }
 
-                const payload = {
-                    id: document._id,
-                }
-
-                const token = jwt.sign(payload, document.password, {expiresIn: "1d"})
+                const token = user.createResetToken()
 
                 const from = "do-not-reply@boilerplate.com"
                 const to = req.body.email
