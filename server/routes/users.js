@@ -35,7 +35,7 @@ router.post(
         User.create(req.body)
             .then(document => {
 
-                res.send(document)
+                res.json(document)
                 return
 
             })
@@ -44,7 +44,7 @@ router.post(
                 if(error.name === "BulkWriteError") {
 
                     res.status(400)
-                    res.send({email: "Email already in use."})
+                    res.json({email: "Email already in use."})
                     return
 
                 }
@@ -102,7 +102,7 @@ router.get(
         User.findById(req.user.id)
             .then(document => {
 
-                res.send(document)
+                res.json(document)
                 return
 
             })
@@ -176,7 +176,7 @@ router.post(
                         if(!result) {
 
                             res.status(401)
-                            res.send({current_password: "Incorrect password."})
+                            res.json({current_password: "Incorrect password."})
                             return
 
                         }
@@ -188,7 +188,7 @@ router.post(
 
                                 const token = user.createAuthenticationToken()
 
-                                res.send({token})
+                                res.json({token})
                                 return
 
                             })

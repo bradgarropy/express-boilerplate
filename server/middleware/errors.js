@@ -3,7 +3,7 @@ function errors(error, req, res, next) {
     console.log(error)
 
     res.status(500)
-    res.send({
+    res.json({
         message: "Found an error!",
         error,
     })

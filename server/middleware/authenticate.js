@@ -18,7 +18,7 @@ function user() {
                     console.log(`Login attempt failed: ${email}`)
 
                     res.status(401)
-                    res.send({email: "User does not exist."})
+                    res.json({email: "User does not exist."})
                     return
 
                 }
@@ -31,7 +31,7 @@ function user() {
                             console.log(`Login attempt failed: ${email}`)
 
                             res.status(401)
-                            res.send({password: "Incorrect password."})
+                            res.json({password: "Incorrect password."})
                             return
 
                         }
@@ -67,7 +67,7 @@ function token() {
         if(!authorization) {
 
             res.status(401)
-            res.send({message: "No token provided."})
+            res.json({message: "No token provided."})
             return
 
         }
@@ -79,7 +79,7 @@ function token() {
             if(error) {
 
                 res.status(401)
-                res.send({message: "Invalid token."})
+                res.json({message: "Invalid token."})
                 return
 
             }
@@ -89,7 +89,7 @@ function token() {
                 if(error) {
 
                     res.status(401)
-                    res.send({message: "Invalid token."})
+                    res.json({message: "Invalid token."})
                     return
 
                 }

@@ -16,7 +16,7 @@ function validate() {
             })
 
             res.status(400)
-            res.send(errors)
+            res.json(errors)
             return
 
         }
