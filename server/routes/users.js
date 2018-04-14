@@ -186,10 +186,20 @@ router.post(
                         user.save()
                             .then(user => {
 
-                                const token = user.createAuthenticationToken()
+                                const from = "do-not-reply@boilerplate.com"
+                                const to = user.email
+                                const subject = "Boilerplate - Password Change Confirmation"
+                                const body = "Your password has been changed successfully!"
 
-                                res.json({token})
-                                return
+                                email.send(from, to, subject, body)
+                                    .then(() => {
+
+                                        const token = user.createAuthenticationToken()
+
+                                        res.json({token})
+                                        return
+
+                                    })
 
                             })
 
