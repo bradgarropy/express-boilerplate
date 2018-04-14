@@ -78,7 +78,11 @@ userSchema.methods.createAuthenticationToken = function() {
         email: this.email,
     }
 
-    return jwt.sign(payload, process.env.SECRET)
+    const options = {
+        expiresIn: "1w",
+    }
+
+    return jwt.sign(payload, process.env.SECRET, options)
 
 }
 
