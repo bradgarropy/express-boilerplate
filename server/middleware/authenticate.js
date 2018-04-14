@@ -23,7 +23,7 @@ function user() {
 
                 }
 
-                user.authenticate_password(req.body.password)
+                user.authenticatePassword(req.body.password)
                     .then(result => {
 
                         if(!result) {

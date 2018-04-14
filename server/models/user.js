@@ -1,5 +1,6 @@
 const mongoose = require("mongoose")
 const bcrypt = require("bcrypt")
+const jwt = require("jsonwebtoken")
 const plugins = require("../plugins/mongoose")
 
 
@@ -61,9 +62,23 @@ userSchema.pre("save", function(next) {
 
 
 // instance methods
-userSchema.methods.authenticate_password = function(password) {
+userSchema.methods.authenticatePassword = function(password) {
 
     return bcrypt.compare(password, this.password)
+
+}
+
+
+userSchema.methods.createAuthenticationToken = function() {
+
+    const payload = {
+        id: this._id,
+        first_name: this.first_name,
+        last_name: this.last_name,
+        email: this.email,
+    }
+
+    return jwt.sign(payload, process.env.SECRET)
 
 }
 

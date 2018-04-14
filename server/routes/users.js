@@ -3,7 +3,6 @@ const {check} = require("express-validator/check")
 const jwt = require("jsonwebtoken")
 
 // utils
-const token = require("../utils/token")
 const email = require("../utils/email")
 
 // models
@@ -69,14 +68,25 @@ router.post(
     ],
     validate(),
     authenticate.user(),
-    (req, res) => {
+    (req, res, next) => {
 
-        console.log(`Login: ${req.user.email}`)
+        User.findById(req.user.id)
+            .then(user => {
 
-        const jwt = token.create(req.user)
+                console.log(`Login: ${req.user.email}`)
 
-        res.send({token: jwt})
-        return
+                const token = user.createAuthenticationToken()
+
+                res.json({token})
+                return
+
+            })
+            .catch(error => {
+
+                next(error)
+                return
+
+            })
 
     }
 
@@ -89,7 +99,7 @@ router.get(
     authenticate.token(),
     (req, res, next) => {
 
-        User.findOne({_id: req.user.id})
+        User.findById(req.user.id)
             .then(document => {
 
                 res.send(document)
@@ -116,17 +126,17 @@ router.patch(
 
         const updates = req.body
 
-        User.findOne({_id: req.user.id})
-            .then(document => {
+        User.findById(req.user.id)
+            .then(user => {
 
-                Object.assign(document, updates)
+                Object.assign(user, updates)
 
-                document.save()
-                    .then(document => {
+                user.save()
+                    .then(user => {
 
-                        const jwt = token.create(document)
+                        const token = user.createAuthenticationToken()
 
-                        res.send({token: jwt})
+                        res.json({token})
                         return
 
                     })
@@ -160,7 +170,7 @@ router.post(
         User.findById(req.user.id)
             .then(user => {
 
-                user.authenticate_password(req.body.current_password)
+                user.authenticatePassword(req.body.current_password)
                     .then(result => {
 
                         if(!result) {
@@ -176,9 +186,9 @@ router.post(
                         user.save()
                             .then(user => {
 
-                                const jwt = token.create(user)
+                                const token = user.createAuthenticationToken()
 
-                                res.send({token: jwt})
+                                res.send({token})
                                 return
 
                             })
