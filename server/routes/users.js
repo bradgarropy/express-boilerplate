@@ -4,7 +4,6 @@ const jwt = require("jsonwebtoken")
 
 // utils
 const token = require("../utils/token")
-const password = require("../utils/password")
 const email = require("../utils/email")
 
 // models
@@ -159,9 +158,9 @@ router.post(
     (req, res, next) => {
 
         User.findById(req.user.id)
-            .then(document => {
+            .then(user => {
 
-                password.compare(req.body.current_password, document.password)
+                user.authenticate_password(req.body.current_password)
                     .then(result => {
 
                         if(!result) {
@@ -172,12 +171,12 @@ router.post(
 
                         }
 
-                        document.password = req.body.new_password
+                        user.password = req.body.new_password
 
-                        document.save()
-                            .then(document => {
+                        user.save()
+                            .then(user => {
 
-                                const jwt = token.create(document)
+                                const jwt = token.create(user)
 
                                 res.send({token: jwt})
                                 return

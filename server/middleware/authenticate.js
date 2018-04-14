@@ -1,8 +1,5 @@
 const jwt = require("jsonwebtoken")
 
-// utils
-const password = require("../utils/password")
-
 // models
 const User = require("../models/user")
 
@@ -26,7 +23,7 @@ function user() {
 
                 }
 
-                password.compare(req.body.password, user.password)
+                user.authenticate_password(req.body.password)
                     .then(result => {
 
                         if(!result) {

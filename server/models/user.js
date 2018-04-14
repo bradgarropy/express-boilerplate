@@ -1,5 +1,5 @@
 const mongoose = require("mongoose")
-const password = require("../utils/password")
+const bcrypt = require("bcrypt")
 const plugins = require("../plugins/mongoose")
 
 
@@ -41,7 +41,7 @@ userSchema.pre("save", function(next) {
         return
     }
 
-    password.hash(this.password)
+    bcrypt.hash(this.password, 10)
         .then(hash => {
 
             this.password = hash
@@ -58,6 +58,14 @@ userSchema.pre("save", function(next) {
         })
 
 })
+
+
+// instance methods
+userSchema.methods.authenticate_password = function(password) {
+
+    return bcrypt.compare(password, this.password)
+
+}
 
 
 // create model
