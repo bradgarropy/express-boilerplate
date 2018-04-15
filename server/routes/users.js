@@ -134,10 +134,11 @@ router.patch(
     authenticate.token(),
     (req, res, next) => {
 
-        const updates = req.body
-
         User.findById(req.user.id)
             .then(user => {
+
+                const updates = req.body
+                delete updates.password
 
                 Object.assign(user, updates)
 
