@@ -23,12 +23,15 @@ router.post(
     authenticate.token(),
     (req, res, next) => {
 
-        const from = req.user.email
         const to = "bradgarropy@gmail.com"
-        const subject = `Boilerplate - Feedback from ${req.user.first_name} ${req.user.last_name}`
-        const feedback = req.body.feedback
+        const from = `${req.user.first_name} ${req.user.last_name} <${req.user.email}>`
+        const subject = `Feedback from ${req.user.first_name} ${req.user.last_name}`
+        const vars = {
+            user: req.user,
+            feedback: req.body.feedback,
+        }
 
-        email.send(from, to, subject, feedback)
+        email.send(to, from, subject, "feedback", vars)
             .then(() => {
 
                 res.json({message: "Thank you for your feedback!"})

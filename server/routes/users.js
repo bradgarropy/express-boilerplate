@@ -35,12 +35,12 @@ router.post(
         User.create(req.body)
             .then(user => {
 
-                const from = "do-not-reply@boilerplate.com"
                 const to = user.email
-                const subject = "Boilerplate - Registration Confirmation"
-                const body = "Welcome to Boilerplate!"
+                const from = "Boilerplate <do-not-reply@boilerplate.com>"
+                const subject = "Registration Confirmation"
+                const vars = {link: `${req.headers.origin}/login`}
 
-                email.send(from, to, subject, body)
+                email.send(to, from, subject, "register", vars)
                     .then(() => {
 
                         res.json(user)
@@ -197,12 +197,12 @@ router.post(
                         user.save()
                             .then(user => {
 
-                                const from = "do-not-reply@boilerplate.com"
                                 const to = user.email
-                                const subject = "Boilerplate - Password Change Confirmation"
-                                const body = "Your password has been changed successfully!"
+                                const from = "Boilerplate <do-not-reply@boilerplate.com>"
+                                const subject = "Password Change Confirmation"
+                                const vars = {link: `${req.headers.origin}/login`}
 
-                                email.send(from, to, subject, body)
+                                email.send(to, from, subject, "change-password", vars)
                                     .then(() => {
 
                                         const token = user.createAuthenticationToken()
@@ -251,12 +251,12 @@ router.post(
 
                 const token = user.createResetToken()
 
-                const from = "do-not-reply@boilerplate.com"
                 const to = req.body.email
-                const subject = "Boilerplate - Password Reset Request"
-                const link = `${req.headers.origin}/reset/${token}`
+                const from = "Boilerplate <do-not-reply@boilerplate.com>"
+                const subject = "Password Reset Request"
+                const vars = {link: `${req.headers.origin}/reset/${token}`}
 
-                email.send(from, to, subject, link)
+                email.send(to, from, subject, "forgot-password", vars)
                     .then(() => {
 
                         res.json({message: "Password reset email sent!"})
@@ -313,8 +313,6 @@ router.post(
 
                     if(error) {
 
-                        console.log(error.name)
-
                         let message = null
 
                         switch(error.name) {
@@ -340,12 +338,12 @@ router.post(
                     user.save()
                         .then(() => {
 
-                            const from = "do-not-reply@boilerplate.com"
                             const to = user.email
-                            const subject = "Boilerplate - Password Reset Confirmation"
-                            const body = "Your password has been reset successfully!"
+                            const from = "Boilerplate <do-not-reply@boilerplate.com>"
+                            const subject = "Password Reset Confirmation"
+                            const vars = {link: `${req.headers.origin}/login`}
 
-                            email.send(from, to, subject, body)
+                            email.send(to, from, subject, "reset-password", vars)
                                 .then(() => {
 
                                     res.json({message: "Password reset successfully!"})

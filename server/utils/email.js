@@ -1,21 +1,48 @@
 const Mailgun = require("mailgun-js")
+const Email = require("email-templates")
+const path = require("path")
 
 
-function send(from, to, subject, text) {
+function send(to, from, subject, template, vars) {
 
-    const data = {
-        from,
-        to,
-        subject,
-        text,
+    const templatePath = path.resolve(__dirname, "..", "email")
+
+    const emailOptions = {
+        juice: true,
+        juiceResources: {
+            preserveImportant: true,
+            webResources: {relativeTo: templatePath},
+        },
+        views: {root: templatePath},
     }
 
-    const mailgun = new Mailgun({
-        apiKey: process.env.MAILGUN_API_KEY,
-        domain: process.env.MAILGUN_DOMAIN,
-    })
+    const email = new Email(emailOptions)
 
-    return mailgun.messages().send(data)
+    return email.render(template, vars)
+        .then(html => {
+
+            const mailgunOptions = {
+                apiKey: process.env.MAILGUN_API_KEY,
+                domain: process.env.MAILGUN_DOMAIN,
+            }
+
+            const mailgun = new Mailgun(mailgunOptions)
+
+            const data = {
+                to,
+                from,
+                subject,
+                html,
+            }
+
+            return mailgun.messages().send(data)
+
+        })
+        .catch(error => {
+
+            console.log(error)
+
+        })
 
 }
 
