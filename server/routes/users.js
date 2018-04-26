@@ -367,9 +367,9 @@ router.post(
 router.post(
     "/reset",
     [
-        check("password").not().isEmpty().withMessage("Password is required."),
+        check("new_password").not().isEmpty().withMessage("New password is required."),
         check("confirmation").not().isEmpty().withMessage("Password confirmation is required."),
-        check("confirmation").custom((value, {req}) => value === req.body.password).withMessage("Passwords must match."),
+        check("confirmation").custom((value, {req}) => value === req.body.new_password).withMessage("Passwords must match."),
     ],
     validate(),
     (req, res, next) => {
@@ -419,7 +419,7 @@ router.post(
 
                     }
 
-                    user.password = req.body.password
+                    user.password = req.body.new_password
 
                     user.save()
                         .then(() => {
