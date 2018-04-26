@@ -31,6 +31,12 @@ const userSchema = mongoose.Schema({
         required: [true, "Password is required."],
         unique: false,
     },
+    active: {
+        type: Boolean,
+        required: [true, "Active is required."],
+        unique: false,
+        default: false,
+    },
 })
 
 
@@ -98,6 +104,21 @@ userSchema.methods.createResetToken = function() {
     }
 
     return jwt.sign(payload, this.password, options)
+
+}
+
+
+userSchema.methods.createActivationToken = function() {
+
+    const payload = {
+        id: this._id,
+    }
+
+    const options = {
+        expiresIn: "1d",
+    }
+
+    return jwt.sign(payload, process.env.SECRET, options)
 
 }
 

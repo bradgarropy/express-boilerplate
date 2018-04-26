@@ -35,12 +35,14 @@ router.post(
         User.create(req.body)
             .then(user => {
 
+                const token = user.createActivationToken()
+
                 const to = user.email
                 const from = "Boilerplate <do-not-reply@boilerplate.com>"
-                const subject = "Registration Confirmation"
-                const vars = {link: `${req.headers.origin}/login`}
+                const subject = "Account Activation"
+                const vars = {link: `${req.headers.origin}/activate/${token}`}
 
-                email.send(to, from, subject, "register", vars)
+                email.send(to, from, subject, "user-activation", vars)
                     .then(() => {
 
                         res.json(user)
@@ -58,6 +60,90 @@ router.post(
                     return
 
                 }
+
+                next(error)
+                return
+
+            })
+
+    }
+)
+
+
+// verify
+router.post(
+    "/activate",
+    (req, res, next) => {
+
+        const token = jwt.decode(req.body.token)
+
+        if(!token) {
+
+            res.status(403)
+            res.json({message: "Invalid activation token."})
+            return
+
+        }
+
+        User.findById(token.id)
+            .then(user => {
+
+                if(!user) {
+
+                    res.status(403)
+                    res.json({message: "Invalid activation token."})
+                    return
+
+                }
+
+                jwt.verify(req.body.token, process.env.SECRET, error => {
+
+                    if(error) {
+
+                        let message = null
+
+                        switch(error.name) {
+
+                            case "TokenExpiredError":
+                                message = "Expired activation token."
+                                break
+
+                            case "JsonWebTokenError":
+                                message = "Invalid activation token."
+                                break
+
+                        }
+
+                        res.status(403)
+                        res.json({message})
+                        return
+
+                    }
+
+                    user.active = true
+
+                    user.save()
+                        .then(() => {
+
+                            const to = user.email
+                            const from = "Boilerplate <do-not-reply@boilerplate.com>"
+                            const subject = "Welcome to Boilerplate"
+                            const vars = {link: `${req.headers.origin}/login`}
+
+                            email.send(to, from, subject, "welcome", vars)
+                                .then(() => {
+
+                                    res.json(user)
+                                    return
+
+                                })
+
+                        })
+
+                })
+
+            })
+            .catch(error => {
 
                 next(error)
                 return
@@ -202,7 +288,7 @@ router.post(
                                 const subject = "Password Change Confirmation"
                                 const vars = {link: `${req.headers.origin}/login`}
 
-                                email.send(to, from, subject, "change-password", vars)
+                                email.send(to, from, subject, "password-change", vars)
                                     .then(() => {
 
                                         const token = user.createAuthenticationToken()
@@ -256,7 +342,7 @@ router.post(
                 const subject = "Password Reset Request"
                 const vars = {link: `${req.headers.origin}/reset/${token}`}
 
-                email.send(to, from, subject, "forgot-password", vars)
+                email.send(to, from, subject, "password-forgot", vars)
                     .then(() => {
 
                         res.json({message: "Password reset email sent!"})
@@ -343,7 +429,7 @@ router.post(
                             const subject = "Password Reset Confirmation"
                             const vars = {link: `${req.headers.origin}/login`}
 
-                            email.send(to, from, subject, "reset-password", vars)
+                            email.send(to, from, subject, "password-reset", vars)
                                 .then(() => {
 
                                     res.json({message: "Password reset successfully!"})
