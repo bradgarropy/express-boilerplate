@@ -24,13 +24,13 @@
         "body-parser": "^1.18.2",
         "cors": "^2.8.4",
         "dotenv": "^5.0.1",
-        "email-templates": "^3.5.2",
+        "email-templates": "^3.6.0",
         "express": "^4.16.3",
         "express-validator": "^5.1.2",
         "jsonwebtoken": "^8.2.1",
         "mailgun-js": "^0.17.0",
         "moment": "^2.22.1",
-        "mongoose": "^5.0.15"
+        "mongoose": "^5.0.16"
     },
     "devDependencies": {
         "eslint": "^4.19.1",
