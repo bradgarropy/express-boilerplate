@@ -70,7 +70,7 @@ router.post(
 )
 
 
-// verify
+// activate
 router.post(
     "/activate",
     (req, res, next) => {
