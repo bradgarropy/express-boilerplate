@@ -3,7 +3,7 @@
 
 ## Register
 
-Create a new user account and emails the user an activation link.
+Create a new user account and email the user an activation link.
 
 ```
 POST /users
@@ -23,11 +23,14 @@ POST /users
 
 ```
 {
-    "active": false,
-    "first_name": "John",
-    "last_name": "Doe",
-    "email": "johndoe@gmail.com",
-    "id": "5af26e87bfe8522140d2d69d"
+    "message": "Account activation link sent to johndoe@gmail.com.",
+    "user": {
+        "active": false,
+        "first_name": "John",
+        "last_name": "Doe",
+        "email": "johndoe@gmail.com",
+        "id": "5af5d29c6d34b918a89537aa"
+    }
 }
 ```
 
@@ -50,11 +53,13 @@ POST /users/activate
 
 ```
 {
-    "active": true,
-    "first_name": "John",
-    "last_name": "Doe",
-    "email": "johndoe@gmail.com",
-    "id": "5af26e87bfe8522140d2d69d"
+    "user": {
+        "active": true,
+        "first_name": "John",
+        "last_name": "Doe",
+        "email": "johndoe@gmail.com",
+        "id": "5af5d29c6d34b918a89537aa"
+    }
 }
 ```
 
@@ -78,7 +83,14 @@ POST /users/login
 
 ```
 {
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVhZjI3MDBjYmZlODUyMjE0MGQyZDY5ZiIsImZpcnN0X25hbWUiOiJCcmFkIiwibGFzdF9uYW1lIjoiR2Fycm9weSIsImVtYWlsIjoiYnJhZGdhcnJvcHlAZ21haWwuY29tIiwiaWF0IjoxNTI1ODM4MDEyLCJleHAiOjE1MjY0NDI4MTJ9.2LtZ4w2StT3mdZP3ZUbhOeA4DQ70dtpAjjXABbuiqaw"
+    "user": {
+        "active": true,
+        "first_name": "John",
+        "last_name": "Doe",
+        "email": "johndoe@gmail.com",
+        "id": "5af5d29c6d34b918a89537aa"
+    },
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVhZjVkMjljNmQzNGI5MThhODk1MzdhYSIsImlhdCI6MTUyNjA2MDAwOCwiZXhwIjoxNTI2NjY0ODA4fQ.rNsFI-b1yA2ixosyvNfWfCHkbyehw-5SKi1QVuafdVE"
 }
 ```
 
@@ -95,18 +107,20 @@ GET /users
 
 ```
 {
-    "active": true,
-    "first_name": "John",
-    "last_name": "Doe",
-    "email": "johndoe@gmail.com",
-    "id": "5af26e87bfe8522140d2d69d"
+    "user": {
+        "active": true,
+        "first_name": "John",
+        "last_name": "Doe",
+        "email": "johndoe@gmail.com",
+        "id": "5af5d29c6d34b918a89537aa"
+    }
 }
 ```
 
 
 ## Update
 
-Change a user's information and update their token.
+Change a user's information.
 
 ```
 PATCH /users
@@ -129,9 +143,8 @@ PATCH /users
         "first_name": "Jon",
         "last_name": "Deer",
         "email": "JonDeer@gmail.com",
-        "id": "5af26e87bfe8522140d2d69d"
-    },
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVhZjI3MDBjYmZlODUyMjE0MGQyZDY5ZiIsImZpcnN0X25hbWUiOiJCcmFkbGV5IiwibGFzdF9uYW1lIjoiR2Fycm9weSIsImVtYWlsIjoiYnJhZGdhcnJvcHlAZ21haWwuY29tIiwiaWF0IjoxNTI1ODM4MjcxLCJleHAiOjE1MjY0NDMwNzF9.2pX9LDJa6N4SpBcu0W19ZzVvoIQYQI8C9-elNrx-0d4"
+        "id": "5af5d29c6d34b918a89537aa"
+    }
 }
 ```
 
@@ -156,7 +169,13 @@ POST /users/password
 
 ```
 {
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVhZjI3MDBjYmZlODUyMjE0MGQyZDY5ZiIsImZpcnN0X25hbWUiOiJCcmFkIiwibGFzdF9uYW1lIjoiR2Fycm9weSIsImVtYWlsIjoiYnJhZGdhcnJvcHlAZ21haWwuY29tIiwiaWF0IjoxNTI1ODM4Njc0LCJleHAiOjE1MjY0NDM0NzR9.NTXb4UeC02IYzl8eXTzgLc1oqOF6QRwD97L4gGuCZsM"
+    "user": {
+        "active": true,
+        "first_name": "John",
+        "last_name": "Doe",
+        "email": "johndoe@gmail.com",
+        "id": "5af5d29c6d34b918a89537aa"
+    }
 }
 ```
 
@@ -179,14 +198,21 @@ POST /users/forgot
 
 ```
 {
-    "message": "Password reset email sent!"
+    "message": "Password reset link sent to johndoe@gmail.com.",
+    "user": {
+        "active": true,
+        "first_name": "John",
+        "last_name": "Doe",
+        "email": "johndoe@gmail.com",
+        "id": "5af5d29c6d34b918a89537aa"
+    }
 }
 ```
 
 
 ## Reset Password
 
-Reset's the user's password.
+Resets the user's password.
 
 ```
 POST /users/reset
@@ -204,6 +230,12 @@ POST /users/reset
 
 ```
 {
-    "message": "Password reset successfully!"
+    "user": {
+        "active": true,
+        "first_name": "John",
+        "last_name": "Doe",
+        "email": "johndoe@gmail.com",
+        "id": "5af5d29c6d34b918a89537aa"
+    }
 }
 ```

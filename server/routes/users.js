@@ -45,7 +45,12 @@ router.post(
                 email.send(to, from, subject, "user-activation", vars)
                     .then(() => {
 
-                        res.json(user)
+                        const response = {
+                            message: `Account activation link sent to ${user.email}.`,
+                            user,
+                        }
+
+                        res.json(response)
                         return
 
                     })
@@ -133,7 +138,7 @@ router.post(
                             email.send(to, from, subject, "welcome", vars)
                                 .then(() => {
 
-                                    res.json(user)
+                                    res.json({user})
                                     return
 
                                 })
@@ -171,9 +176,12 @@ router.post(
 
                 console.log(`Login: ${req.user.email}`)
 
-                const token = user.createAuthenticationToken()
+                const response = {
+                    user,
+                    token: user.createAuthenticationToken(),
+                }
 
-                res.json({token})
+                res.json(response)
                 return
 
             })
@@ -198,7 +206,7 @@ router.get(
         User.findById(req.user.id)
             .then(user => {
 
-                res.json(user)
+                res.json({user})
                 return
 
             })
@@ -231,9 +239,7 @@ router.patch(
                 user.save()
                     .then(user => {
 
-                        const token = user.createAuthenticationToken()
-
-                        res.json({token})
+                        res.json({user})
                         return
 
                     })
@@ -291,9 +297,7 @@ router.post(
                                 email.send(to, from, subject, "password-change", vars)
                                     .then(() => {
 
-                                        const token = user.createAuthenticationToken()
-
-                                        res.json({token})
+                                        res.json({user})
                                         return
 
                                     })
@@ -345,7 +349,12 @@ router.post(
                 email.send(to, from, subject, "password-forgot", vars)
                     .then(() => {
 
-                        res.json({message: "Password reset email sent!"})
+                        const response = {
+                            message: `Password reset link sent to ${req.body.email}.`,
+                            user,
+                        }
+
+                        res.json(response)
                         return
 
                     })
@@ -422,7 +431,7 @@ router.post(
                     user.password = req.body.new_password
 
                     user.save()
-                        .then(() => {
+                        .then(user => {
 
                             const to = user.email
                             const from = "Boilerplate <do-not-reply@boilerplate.com>"
@@ -432,7 +441,7 @@ router.post(
                             email.send(to, from, subject, "password-reset", vars)
                                 .then(() => {
 
-                                    res.json({message: "Password reset successfully!"})
+                                    res.json({user})
                                     return
 
                                 })
