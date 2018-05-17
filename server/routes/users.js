@@ -225,6 +225,13 @@ router.get(
 // update
 router.patch(
     "/",
+    [
+        check("first_name").optional().not().isEmpty().withMessage("First name is required."),
+        check("last_name").optional().not().isEmpty().withMessage("Last name is required."),
+        check("email").optional().not().isEmpty().withMessage("Email is required."),
+        check("email").optional().isEmail().withMessage("Invalid email."),
+    ],
+    validate(),
     authenticate.token(),
     (req, res, next) => {
 
